@@ -1,0 +1,11 @@
+useradd nexus -u 200
+mkdir /opt/nexus-data && chown -R 200 /opt/nexus-data
+
+docker pull sonatype/nexus3
+
+docker run -d --name nexus -p 5081:8081 -e NEXUS_CONTEXT=nexus -v /opt/nexus-data:/nexus-data sonatype/nexus3
+
+##########################################
+#If you want to stop manually
+############################################
+#docker stop --time=120 nexus
