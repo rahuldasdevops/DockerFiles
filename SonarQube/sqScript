@@ -1,0 +1,16 @@
+##########################################
+# Create volume instead of bind mount
+########################################
+docker volume create --name sonarqube_conf
+docker volume create --name sonarqube_data
+docker volume create --name sonarqube_logs
+docker volume create --name sonarqube_extensions
+
+docker pull sonarqube:lts-communitydocker pull sonarqube:lts-community
+
+docker run -d --name sonarqube -p 5001:9001 -v sonarqube_conf:/opt/sonarqube/conf -v sonarqube_data:/opt/sonarqube/data -v sonarqube_extensions:/opt/sonarqube/extensions -v sonarqube_logs:/opt/sonarqube/logs sonarqube:lts-community
+
+##########################################
+#If you want to stop manually
+############################################
+#docker run --stop-timeout 3600 sonarqube
