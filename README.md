@@ -1,8 +1,8 @@
-#New Docker Journey:-
+# New Docker Journey:-
 Create and connect new ec2 instance
 1.	Create NGS group in AWS
-Inbound rule:-
-Custom TCP:
+- Inbound rule:-
+   - Custom TCP:
 -	Range 0-65000
 -	Source 0.0.0.0/0
 SSH:
