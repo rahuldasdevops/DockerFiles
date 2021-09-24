@@ -3,7 +3,6 @@ pipeline-maven:3.10.0
 ssh
 ssh-agent
 oauth-credentials
-ant:latest
 antisamy-markup-formatter:latest
 build-timeout:latest
 cloudbees-folder:latest
@@ -12,8 +11,6 @@ credentials-binding:latest
 email-ext:latest
 git:latest
 github-branch-source:latest
-gradle:latest
-ldap:latest
 mailer:latest
 matrix-auth:latest
 pam-auth:latest
