@@ -7,7 +7,7 @@ REF_LOC=/usr/share/jenkins/ref
 
 mkdir $HOME
 chown 1000:1000 $HOME
-cp casc.yaml $HOME
+
 #####################################
 # Define no of executors in Jenkins master machine
 #####################################
@@ -16,6 +16,74 @@ cat <<EOF >executors.groovy
 import jenkins.model.*
 Jenkins.instance.setNumExecutors(4)
 EOF
+
+#####################################
+# Create casc in Jenkins master machine
+#####################################
+
+cat <<EOF >casc.yaml
+jenkins:
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: ${JENKINS_ADMIN_ID}
+         password: ${JENKINS_ADMIN_PASSWORD}
+       - id: test
+         password: test@123		 
+  authorizationStrategy:
+    projectMatrix:
+      permissions:
+        - "Overall/Administer:admin"
+        - "Overall/Read:authenticated"
+        - "Overall/Read:test"
+  remotingSecurity:
+    enabled: true
+security:
+  queueItemAuthenticator:
+    authenticators:
+    - global:
+        strategy: triggeringUsersAuthorizationStrategy		
+unclassified:
+  location:
+    url: http://localhost:5000/
+EOF
+
+#####################################
+# Define plugins in Jenkins master machine
+#####################################
+
+cat <<EOF >plugins.txt
+authorize-project:latest 
+pipeline-maven:3.10.0
+ssh
+ssh-agent
+oauth-credentials
+antisamy-markup-formatter:latest
+build-timeout:latest
+cloudbees-folder:latest
+configuration-as-code:latest
+credentials-binding:latest
+email-ext:latest
+git:latest
+github-branch-source:latest
+mailer:latest
+matrix-auth:latest
+pam-auth:latest
+pipeline-github-lib:latest
+pipeline-stage-view:latest
+ssh-slaves:latest
+timestamper:latest
+workflow-aggregator:latest
+ws-cleanup:latest
+EOF
+
+#####################################
+# Download Maven and NodeJs package
+#####################################
+wget https://dlcdn.apache.org/maven/maven-3/3.8.2/binaries/apache-maven-3.8.2-bin.tar.gz
+wget https://nodejs.org/dist/v14.17.6/node-v14.17.6-linux-x64.tar.xz
+#####################################
 
 #####################################
 # creates DockerFile
@@ -38,7 +106,6 @@ RUN xargs /usr/local/bin/install-plugins.sh < $REF_LOC/plugins.txt
 COPY --chown=$USERNAME:$USERNAME executors.groovy  $REF_LOC/init.groovy.d/executors.groovy
 #RUN mkdir $REF_LOC/ssl
 #COPY --chown=$USERNAME:$USERNAME rahul.pfx $REF_LOC/ssl
-#COPY --chown=$USERNAME:$USERNAME casc.yaml /var/jenkins_home/casc.yaml
 ADD casc.yaml /usr/share/jenkins/ref/init.groovy.d/casc.yaml
 USER root
 ADD node-v14.17.6-linux-x64.tar.xz /opt/
