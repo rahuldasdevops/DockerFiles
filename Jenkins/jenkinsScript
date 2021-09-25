@@ -1,9 +1,12 @@
 USERNAME=jenkins
 HOME=/opt/jenkins_home
-#VOL=jenkins_home
+VOL=jenkins_home
 IMAGE=myimagejs:final
 CONT=mycontjs
 REF_LOC=/usr/share/jenkins/ref
+NODEJS_HOME=/opt/nodejs
+MAVEN_HOME=/opt/maven
+
 
 mkdir $HOME
 chown 1000:1000 $HOME
@@ -96,8 +99,8 @@ ENV JENKINS_SLAVE_AGENT_PORT=49100
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
 ENV CASC_JENKINS_CONFIG /var/jenkins_home/init.groovy.d/casc.yaml
 ENV HOME /var/jenkins_home
-ENV NODEJS_HOME /opt/nodejs
-ENV MAVEN_HOME /opt/maven
+ENV NODEJS_HOME $NODEJS_HOME
+ENV MAVEN_HOME $MAVEN_HOME
 ENV PATH $NODEJS_HOME/bin:$MAVEN_HOME/bin:$PATH
 
 COPY --chown=$USERNAME:$USERNAME plugins.txt $REF_LOC
@@ -115,9 +118,9 @@ RUN mv /opt/apache-maven-3.8.2 /opt/maven
 RUN chown -R jenkins:jenkins /opt/nodejs
 RUN chown -R jenkins:jenkins /opt/maven
 USER jenkins
-#ENV JENKINS_OPTS --httpPort=-1 --httpsPort=8081 --httpsKeyStore=$REF_LOC/ssl/rahul.pfx --httpsKeyStorePassword=Edison123
+#ENV JENKINS_OPTS --httpPort=-1 --httpsPort=8081 --httpsKeyStore=$REF_LOC/ssl/rahul.pfx --httpsKeyStorePassword=XXX
 EXPOSE 8080
-VOLUME jenkins_home
+VOLUME $VOL
 EOF
 
 docker build --no-cache -t $IMAGE .
