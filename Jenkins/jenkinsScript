@@ -6,6 +6,7 @@ CONT=mycontjs
 REF_LOC=/usr/share/jenkins/ref
 NODEJS_HOME=/opt/nodejs
 MAVEN_HOME=/opt/maven
+DOL=$
 
 
 mkdir $HOME
@@ -30,8 +31,8 @@ jenkins:
     local:
       allowsSignup: false
       users:
-       - id: ${JENKINS_ADMIN_ID}
-         password: ${JENKINS_ADMIN_PASSWORD}
+       - id: $DOL{JENKINS_ADMIN_ID}
+         password: $DOL{JENKINS_ADMIN_PASSWORD}
        - id: test
          password: test@123		 
   authorizationStrategy:
@@ -101,8 +102,7 @@ ENV CASC_JENKINS_CONFIG /var/jenkins_home/init.groovy.d/casc.yaml
 ENV HOME /var/jenkins_home
 ENV NODEJS_HOME $NODEJS_HOME
 ENV MAVEN_HOME $MAVEN_HOME
-ENV PATH $NODEJS_HOME/bin:$MAVEN_HOME/bin:/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-
+ENV PATH $NODEJS_HOME/bin:$MAVEN_HOME/bin:$DOL{PATH}
 COPY --chown=$USERNAME:$USERNAME plugins.txt $REF_LOC
 RUN xargs /usr/local/bin/install-plugins.sh < $REF_LOC/plugins.txt
 
