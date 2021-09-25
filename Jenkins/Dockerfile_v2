@@ -1,0 +1,26 @@
+FROM jenkins/jenkins:lts-jdk11
+MAINTAINER Rahul Das
+ENV JENKINS_SLAVE_AGENT_PORT=49100
+ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
+ENV CASC_JENKINS_CONFIG /var/jenkins_home/init.groovy.d/casc.yaml
+ENV HOME /var/jenkins_home
+ENV NODEJS_HOME /opt/nodejs
+ENV MAVEN_HOME /opt/maven
+ENV PATH $NODEJS_HOME/bin:$MAVEN_HOME/bin:$PATH
+
+COPY --chown=jenkins:jenkins plugins.txt /usr/share/jenkins/ref
+RUN xargs /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+
+COPY --chown=jenkins:jenkins executors.groovy  /usr/share/jenkins/ref/init.groovy.d/executors.groovy
+RUN mkdir /usr/share/jenkins/ref/ssl
+ADD casc.yaml /usr/share/jenkins/ref/init.groovy.d/casc.yaml
+USER root
+ADD node-v14.17.6-linux-x64.tar.xz /opt/
+ADD apache-maven-3.8.2-bin.tar.gz /opt/
+RUN mv /opt/node-v14.17.6-linux-x64 /opt/nodejs
+RUN mv /opt/apache-maven-3.8.2 /opt/maven
+RUN chown -R jenkins:jenkins /opt/nodejs
+RUN chown -R jenkins:jenkins /opt/maven
+USER jenkins
+EXPOSE 8080
+VOLUME jenkins_home
