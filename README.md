@@ -32,11 +32,12 @@ Create and connect new ec2 instance
 4.	`service docker status`
 5.	`docker run hello-world`
 # Install Docker-compose:
-6.	`curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose`
-7.	`chmod +x /usr/local/bin/docker-compose`
-8.	`ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose`
-9.	`docker-compose –version`
-
+```js
+curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+docker-compose –version
+```
 # Docker Compose:
 Using docker compose you can build or pull the images and achieve micro service in single node. It does not support swarm. 
 Command:
