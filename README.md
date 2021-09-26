@@ -53,7 +53,7 @@ After you install 3 type of drivers come-
    -	Bridge (default) -> Isolated from host, private network. Need to do port forwarding to map docker private port with host port. 
    -	Host -> Uses host network. 
    -  None -> Uses no network. This is using when you want to discard container from any network. 
- -	Overlay network: - It uses in multi hosts, multi containers communication. 
+- Overlay network: - It uses in multi hosts, multi containers communication. 
 After you initialize swarm addition 2 network comes:-
    -	Ingress: - This is overlay type network uses for load balancing in multiple hosts. It uses routing mesh for LB. 
    -	Gwbridge:- This is bridge type network. 
