@@ -59,7 +59,7 @@ After you initialize swarm addition 2 network comes:-
    -	Gwbridge:- This is bridge type network. 
 
 When you initialize a swarm or join a Docker host to an existing swarm, two new networks are created on that Docker host:
-   -	an overlay network called ingress, which handles the control and data traffic related to swarm services. When you create a swarm service and do not connect it to a user-defined overlay network, it connects to the ingress network by default.
+   ->	an overlay network called ingress, which handles the control and data traffic related to swarm services. When you create a swarm service and do not connect it to a user-defined overlay network, it connects to the ingress network by default.
    -	a bridge network called docker_gwbridge, which connects the individual Docker daemon to the other daemons participating in the swarm.
 
 To check network:
