@@ -29,7 +29,7 @@ Create and connect new ec2 instance
 4.	service docker status
 5.	docker run hello-world
 # Install Docker-compose:
-6.	 -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+6.	curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 7.	chmod +x /usr/local/bin/docker-compose
 8.	ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 9.	docker-compose –version
@@ -59,7 +59,7 @@ After you initialize swarm addition 2 network comes:-
    -	Gwbridge:- This is bridge type network. 
 
 When you initialize a swarm or join a Docker host to an existing swarm, two new networks are created on that Docker host:
-   ->	an overlay network called ingress, which handles the control and data traffic related to swarm services. When you create a swarm service and do not connect it to a user-defined overlay network, it connects to the ingress network by default.
+   -	an overlay network called ingress, which handles the control and data traffic related to swarm services. When you create a swarm service and do not connect it to a user-defined overlay network, it connects to the ingress network by default.
    -	a bridge network called docker_gwbridge, which connects the individual Docker daemon to the other daemons participating in the swarm.
 
 To check network:
