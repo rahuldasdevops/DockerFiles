@@ -37,7 +37,7 @@ Create and connect new ec2 instance
 # Docker Compose:
 Using docker compose you can build or pull the images and achieve micro service in single node. It does not support swarm. 
 Command:
-   -`	docker-compose up –d`
+   -	`docker-compose up –d`
    -	`docker-compose up –d –build`  <This command to build new application image in runtime without stopping anything.>
 # Docker Swarm:
 Using docker swarm, you can handle multi container in multiple docker hosts/engines. 
