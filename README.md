@@ -1,4 +1,4 @@
-# New Docker Journey:- ![alt text](https://ubc-library-rc.github.io/intro-docker/content/figures/docker_boyi_wu.jpg)
+# New Docker Journey:- ![alt text](https://github.com/rahuldasdevops/DockerFiles/blob/main/docker.jpg?raw=true)
 Create and connect new ec2 instance
 1.	Create NGS group in AWS
 - Inbound rule:-
