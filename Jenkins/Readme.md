@@ -1,4 +1,4 @@
-# Docker Image:
+# Docker Image: 
 `docker pull dasr4/my-jenkins:v2` [added maven, npm as env variable]
 
 # Run:
@@ -6,3 +6,6 @@
 
 # To create new image
 `bash jenkinsScript`
+
+## Imgage URL:
+[ll](LICENSE)
