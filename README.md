@@ -2,13 +2,14 @@
 Create and connect new ec2 instance
 1.	Create NGS group in AWS
 - Inbound rule:-
+```sh
    - Type: Custom TCP:
       -	Range 0-65000
       -	Source 0.0.0.0/0
    - SSH:
       -	Range 22
       -	Source 0.0.0.0/0
- 
+ ```
 
 - Outbound rule:-
  
