@@ -44,9 +44,9 @@ Using docker swarm, you can handle multi container in multiple docker hosts/engi
 
 # Docker stack:
 Using stack, if you can achieve mircoservice in multi containers. 
-   - 	docker stack deploy -c docker-compose.yml firstStack
-   - 	docker stack services firstStack
-   -	docker service ls
+   - 	`docker stack deploy -c docker-compose.yml firstStack`
+   - 	`docker stack services firstStack`
+   -	`docker service ls`
    
 # Docker networking:
 After you install 3 type of drivers come-
