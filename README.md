@@ -12,6 +12,8 @@ Create and connect new ec2 instance
  ```
 
 - Outbound rule:-
+```sh
+```
  
 2.	Create VM with this security group
 3.	Create a new key pair and download pem file
