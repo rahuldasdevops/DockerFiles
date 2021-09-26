@@ -8,4 +8,4 @@
 `bash jenkinsScript`
 
 ## Imgage URL:
-[ll](LICENSE)
+[Jenkins](https://hub.docker.com/repository/docker/dasr4/my-jenkins)
