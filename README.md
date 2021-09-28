@@ -44,7 +44,19 @@ Command:
    -	`docker-compose up –d`
    -	`docker-compose up –d –build` This command to build new application image in runtime without stopping anything.
 # Docker Swarm:
+There are some prerequisites to start swarm:
+```
+TCP port 2377 for cluster management communications
+TCP and UDP port 7946 for communication among nodes
+UDP port 4789 for overlay network traffic
+```
 Using docker swarm, you can handle multi container in multiple docker hosts/engines. 
+- `docker swarm init` - for initialize swarm, and the node will become "Leader". You can also run `docker swarm init --advertise-addr <privateip>`.
+- `docker swarm init --advertise-addr <privateip> --data-path-port <some customize port>` -- [StackOver Flow1](https://stackoverflow.com/questions/60438128/swarm-mode-routing-mesh-not-working-instead-is-working-like-host-mode-by-defaul) [StackOver Flow2](https://stackoverflow.com/questions/57151496/is-it-possible-to-customize-swarm-port-if-so-how-to-do-this)
+-  Either you can add node as manager or worker with Leader in swarn network. 
+- `docker swarm join-token <worker/manager>` to Get the token.
+- `doker swarm leave --force` to leave swarm.
+- `promote` to make worker to manager or `demote` to manager to worker.
 
 # Docker stack:
 Using stack, if you can achieve mircoservice in multi containers. 
