@@ -60,13 +60,13 @@ Using docker swarm, you can handle multi container in multiple docker hosts/engi
 - `docker run -it -d -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock dockersamples/visualizer` to create dashboard view. Not in swarm mode. 
 - `docker node update --availability drain <leader/manager node name>` to disable manager or leader node to run any container. Only worker node will run the application service as container. 
 
-# Docker stack:
+# Docker Stack:
 Using stack, if you can achieve mircoservice in multi containers. 
    - 	`docker stack deploy -c docker-compose.yml firstStack`
    - 	`docker stack services firstStack`
    -	`docker service ls`
    
-# Docker networking:
+# Docker Networking:
 After you install 3 type of drivers come-
    -	Bridge (default) -> Isolated from host, private network. Need to do port forwarding to map docker private port with host port. 
    -	Host -> Uses host network. 
