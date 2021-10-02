@@ -85,3 +85,13 @@ To check network:
    -	`docker network ls`
    -	`docker network inspect <n/w name>`
 
+
+```
+Docker Container --- run same host machine
+
+Docker compose --- run application in same host machine
+
+Docker swarm --- application as service in container in  multiple docker host engine.
+
+Docker stack --- uses same docker compose yaml to deploy complete application in different docker host machine. 
+```
