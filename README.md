@@ -18,7 +18,8 @@ Create and connect new ec2 instance
  ```
 
 - Outbound rule:-
-```- Type: All TCP:
+```
+   - Type: All TCP:
       -	Range 0-65535
       -	Destination 0.0.0.0/0
    - All traffic:
