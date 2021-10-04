@@ -9,10 +9,21 @@ Create and connect new ec2 instance
    - SSH:
       -	Range 22
       -	Source 0.0.0.0/0
+   - Custom UDP:
+      -  Range 4789
+      -  Source 0.0.0.0/0
+   - Custom UDP:
+      -  Range 7946
+      -  Source 0.0.0.0/0
  ```
 
 - Outbound rule:-
-```sh
+```- Type: All TCP:
+      -	Range 0-65535
+      -	Destination 0.0.0.0/0
+   - All traffic:
+      -	Range All
+      -	Destination 0.0.0.0/0
 ```
  
 2.	Create VM with this security group
