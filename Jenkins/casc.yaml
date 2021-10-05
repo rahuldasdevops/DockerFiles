@@ -23,3 +23,16 @@ security:
 unclassified:
   location:
     url: http://localhost:5000/
+tool:
+  JDK:
+    installations:
+      - name: JDK_master
+        home: "/opt/java/openjdk"
+  git:
+    installations:
+      - name: Default
+        home: "git"
+  Maven:
+    installations:
+      - name: mvn_master
+        home: "/var/jenkins_home/maven"
