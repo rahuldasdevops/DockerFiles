@@ -20,3 +20,5 @@ ssh-slaves:latest
 timestamper:latest
 workflow-aggregator:latest
 ws-cleanup:latest
+junit:latest
+job-dsl:latest
