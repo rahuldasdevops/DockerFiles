@@ -1,8 +1,8 @@
 # Docker Image: 
-`docker pull dasr4/my-jenkins:v2` [added maven, npm as env variable]
+`docker pull dasr4/my-jenkins:v2.1` [added maven, npm as env variable]
 
 # Run:
-`docker run -d --name jenkins -p 8080:8080 --env JENKINS_ADMIN_ID=admin --env JENKINS_ADMIN_PASSWORD=XXX -v /opt/jenkins_home:/var/jenkins_home dasr4/my-jenkins:v2`
+`docker run -d --name jenkins -p 8080:8080 --env JENKINS_ADMIN_ID=admin --env JENKINS_ADMIN_PASSWORD=XXX -v /opt/jenkins_home:/var/jenkins_home dasr4/my-jenkins:v2.1`
 
 # [Recomendation]
 Using docker compose file either in single machin or `STACK` mode:- `docker-compose up -d`.
