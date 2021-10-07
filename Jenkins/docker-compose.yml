@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  jenkins:
+    image: dasr4/my-jenkins:v2.1
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    ports:
+      - "8080:8080"
+    environment:
+      JENKINS_ADMIN_ID: "$$(cat /run/secrets/JENKINS_ADMIN_ID)"
+      JENKINS_ADMIN_PASSWORD: "$$(cat /run/secrets/JENKINS_ADMIN_PASSWORD)"
+    secrets:
+      - JENKINS_ADMIN_ID
+      - JENKINS_ADMIN_PASSWORD
+secrets:
+  JENKINS_ADMIN_ID:
+    file: user.txt
+  JENKINS_ADMIN_PASSWORD:
+    file: pwd.txt
+volumes:
+  jenkins_home:
