@@ -121,7 +121,7 @@ EOF
 # Download Maven and NodeJs package
 #####################################
 wget https://dlcdn.apache.org/maven/maven-3/3.8.3/binaries/apache-maven-3.8.3-bin.tar.gz --no-check-certificate
-wget https://nodejs.org/dist/v14.17.6/node-v14.17.6-linux-x64.tar.xz --no-check-certificate
+wget https://nodejs.org/dist/v14.18.0/node-v14.18.0-linux-x64.tar.xz --no-check-certificate
 #####################################
 
 #####################################
@@ -165,8 +165,8 @@ EOF
 #####################################
 # creates pwd.txt
 #####################################
-XXXX
 cat <<EOF >pwd.txt
+XXXX
 EOF
 ####################################
 
