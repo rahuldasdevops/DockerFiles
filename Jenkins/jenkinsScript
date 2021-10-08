@@ -2,11 +2,14 @@ USERNAME=jenkins
 HOME=/opt/jenkins_home
 VOL=jenkins_home
 IMAGE=myimagejs:final
+BASE_IMAGE=jenkins/jenkins:lts-jdk11
 CONT=mycontjs
 REF_LOC=/usr/share/jenkins/ref
 NODEJS_HOME=/opt/nodejs
 MAVEN_HOME=/var/jenkins_home/maven
 DOL=$
+PORT=8080
+JNLP_PORT=449100
 
 
 #mkdir $HOME
@@ -64,7 +67,7 @@ tool:
   Maven:
     installations:
       - name: mvn_master
-        home: "/var/jenkins_home/maven"
+        home: "$MAVEN_HOME"
 jobs:
   - script: >
       job('Super-seed'){
@@ -127,37 +130,37 @@ wget https://nodejs.org/dist/v14.17.6/node-v14.17.6-linux-x64.tar.xz
 #####################################
 
 cat <<EOF >Dockerfile
-FROM jenkins/jenkins:lts-jdk11
+FROM $BASE_IMAGE
 MAINTAINER Rahul Das
-ENV JENKINS_SLAVE_AGENT_PORT=49100
+ENV JENKINS_SLAVE_AGENT_PORT=$JNLP_PORT
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
-ENV CASC_JENKINS_CONFIG /var/jenkins_home/casc.yaml
-ENV HOME /var/jenkins_home
-ENV NODEJS_HOME /opt/nodejs
-ENV MAVEN_HOME $DOLHOME/maven
+ENV CASC_JENKINS_CONFIG $HOME/casc.yaml
+ENV HOME $HOME
+ENV NODEJS_HOME $NODEJS_HOME
+ENV MAVEN_HOME $MAVEN_HOME
 ENV PATH $DOLNODEJS_HOME/bin:$DOLMAVEN_HOME/bin:$DOLPATH
 ### Enable below PROXY if you run this in any enterprise
 #ENV HTTPS_PROXY
 #ENV HTTP_PROXY
 
-COPY --chown=jenkins:jenkins plugins.txt /usr/share/jenkins/ref
-RUN xargs /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+COPY --chown=$USERNAME:$USERNAME plugins.txt $REF_LOC
+RUN xargs /usr/local/bin/install-plugins.sh < $REF_LOC/plugins.txt
 
-COPY --chown=jenkins:jenkins executors.groovy  /usr/share/jenkins/ref/init.groovy.d/executors.groovy
-COPY --chown=jenkins:jenkins casc.yaml /var/jenkins_home/
-#COPY --chown=jenkins:jenkins proxy.xml /var/jenkins_home/
+COPY --chown=$USERNAME:$USERNAME executors.groovy  $REF_LOC/init.groovy.d/executors.groovy
+COPY --chown=$USERNAME:$USERNAME casc.yaml $HOME
+#COPY --chown=$USERNAME:$USERNAME proxy.xml $HOME
 
-ADD maven.tar.gz /usr/share/jenkins/ref/
+ADD maven.tar.gz $REF_LOC
 USER root
 ADD node-v14.18.0-linux-x64.tar.xz /opt/
 
-RUN mv /usr/share/jenkins/ref/apache-maven-3.8.3 /usr/share/jenkins/ref/maven
-RUN mv /opt/node-v14.18.0-linux-x64 /opt/nodejs
-RUN chown -R jenkins:jenkins /opt/nodejs
+RUN mv $REF_LOC/apache-maven-3.8.3 $REF_LOC/maven
+RUN mv /opt/node-v14.18.0-linux-x64 $NODEJS_HOME
+RUN chown -R $USERNAME:$USERNAME $NODEJS_HOME
 
-USER jenkins
-EXPOSE 8080
-VOLUME jenkins_home
+USER $USERNAME
+EXPOSE $PORT
+VOLUME $VOL
 EOF
 
 #####################################
@@ -169,11 +172,11 @@ cat <<EOF >docker-compose.yml
 version: "3.9"
 services:
   jenkins:
-    image: dasr4/my-jenkins:v2.2
+    image: $DOLIMAGE
     volumes:
-      - jenkins_home:/var/jenkins_home
+      - $VOL:$HOME
     ports:
-      - "8080:8080"
+      - "$PORT:$PORT"
     environment:
       JENKINS_ADMIN_ID: "$DOL$DOL(cat /run/secrets/JENKINS_ADMIN_ID)"
       JENKINS_ADMIN_PASSWORD: "$DOL$DOL(cat /run/secrets/JENKINS_ADMIN_PASSWORD)"
@@ -186,7 +189,7 @@ secrets:
   JENKINS_ADMIN_PASSWORD:
     file: pwd.txt
 volumes:
-  jenkins_home:
+  $VOL:
 EOF
 ######################################
 #####################################
