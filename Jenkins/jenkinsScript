@@ -34,7 +34,7 @@ jenkins:
     local:
       allowsSignup: false
       users:
-       - id: $\{JENKINS_ADMIN_ID}
+       - id: \${JENKINS_ADMIN_ID}
          password: \${JENKINS_ADMIN_PASSWORD}
        - id: test
          password: test@123		 
