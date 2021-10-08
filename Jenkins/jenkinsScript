@@ -121,7 +121,7 @@ EOF
 #####################################
 # Download Maven and NodeJs package
 #####################################
-wget https://dlcdn.apache.org/maven/maven-3/3.8.2/binaries/apache-maven-3.8.2-bin.tar.gz
+wget https://dlcdn.apache.org/maven/maven-3/3.8.3/binaries/apache-maven-3.8.3-bin.tar.gz
 wget https://nodejs.org/dist/v14.17.6/node-v14.17.6-linux-x64.tar.xz
 #####################################
 
@@ -197,7 +197,7 @@ COPY --chown=$USERNAME:$USERNAME executors.groovy  $REF_LOC/init.groovy.d/execut
 COPY --chown=$USERNAME:$USERNAME casc.yaml $HOME
 #COPY --chown=$USERNAME:$USERNAME proxy.xml $HOME
 
-ADD maven.tar.gz $REF_LOC
+ADD apache-maven-3.8.3-bin.tar.gz $REF_LOC
 USER root
 ADD node-v14.18.0-linux-x64.tar.xz /opt/
 
