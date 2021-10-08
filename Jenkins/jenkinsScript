@@ -5,12 +5,12 @@ IMAGE=myimagejs:final
 CONT=mycontjs
 REF_LOC=/usr/share/jenkins/ref
 NODEJS_HOME=/opt/nodejs
-MAVEN_HOME=/opt/maven
+MAVEN_HOME=/var/jenkins_home/maven
 DOL=$
 
 
-mkdir $HOME
-chown 1000:1000 $HOME
+#mkdir $HOME
+#chown 1000:1000 $HOME
 
 #####################################
 # Define no of executors in Jenkins master machine
@@ -27,6 +27,7 @@ EOF
 
 cat <<EOF >casc.yaml
 jenkins:
+  systemMessage: "Welcome to your Jenkins instance."
   securityRealm:
     local:
       allowsSignup: false
@@ -38,7 +39,7 @@ jenkins:
   authorizationStrategy:
     projectMatrix:
       permissions:
-        - "Overall/Administer:admin"
+        - "Overall/Administer: $DOL{JENKINS_ADMIN_ID}"
         - "Overall/Read:authenticated"
         - "Overall/Read:test"
   remotingSecurity:
@@ -51,6 +52,36 @@ security:
 unclassified:
   location:
     url: http://localhost:5000/
+tool:
+  JDK:
+    installations:
+      - name: JDK_master
+        home: "/opt/java/openjdk"
+  git:
+    installations:
+      - name: Default
+        home: "git"
+  Maven:
+    installations:
+      - name: mvn_master
+        home: "/var/jenkins_home/maven"
+jobs:
+  - script: >
+      job('Super-seed'){
+        scm{
+          git{
+            remote{
+              url('https://github.com/rahuldasdevops/microservice-pipelines.git')
+              branch('develop@1.0')
+            }
+          }
+        }
+        steps{
+          dsl{
+            external('dsl/firstSpin.groovy')
+          }
+        }
+      }    
 EOF
 
 #####################################
@@ -80,6 +111,8 @@ ssh-slaves:latest
 timestamper:latest
 workflow-aggregator:latest
 ws-cleanup:latest
+junit:latest
+job-dsl:latest
 EOF
 
 #####################################
@@ -98,33 +131,85 @@ FROM jenkins/jenkins:lts-jdk11
 MAINTAINER Rahul Das
 ENV JENKINS_SLAVE_AGENT_PORT=49100
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
-ENV CASC_JENKINS_CONFIG /var/jenkins_home/init.groovy.d/casc.yaml
+ENV CASC_JENKINS_CONFIG /var/jenkins_home/casc.yaml
 ENV HOME /var/jenkins_home
-ENV NODEJS_HOME $NODEJS_HOME
-ENV MAVEN_HOME $MAVEN_HOME
-ENV PATH $NODEJS_HOME/bin:$MAVEN_HOME/bin:$DOL{PATH}
-COPY --chown=$USERNAME:$USERNAME plugins.txt $REF_LOC
-RUN xargs /usr/local/bin/install-plugins.sh < $REF_LOC/plugins.txt
+ENV NODEJS_HOME /opt/nodejs
+ENV MAVEN_HOME $DOLHOME/maven
+ENV PATH $DOLNODEJS_HOME/bin:$DOLMAVEN_HOME/bin:$DOLPATH
+### Enable below PROXY if you run this in any enterprise
+#ENV HTTPS_PROXY
+#ENV HTTP_PROXY
 
-COPY --chown=$USERNAME:$USERNAME executors.groovy  $REF_LOC/init.groovy.d/executors.groovy
-#RUN mkdir $REF_LOC/ssl
-#COPY --chown=$USERNAME:$USERNAME rahul.pfx $REF_LOC/ssl
-ADD casc.yaml $REF_LOC/init.groovy.d/casc.yaml
+COPY --chown=jenkins:jenkins plugins.txt /usr/share/jenkins/ref
+RUN xargs /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+
+COPY --chown=jenkins:jenkins executors.groovy  /usr/share/jenkins/ref/init.groovy.d/executors.groovy
+COPY --chown=jenkins:jenkins casc.yaml /var/jenkins_home/
+#COPY --chown=jenkins:jenkins proxy.xml /var/jenkins_home/
+
+ADD maven.tar.gz /usr/share/jenkins/ref/
 USER root
-ADD node-v14.17.6-linux-x64.tar.xz /opt/
-ADD apache-maven-3.8.2-bin.tar.gz /opt/
-RUN mv /opt/node-v14.17.6-linux-x64 /opt/nodejs
-RUN mv /opt/apache-maven-3.8.2 /opt/maven
+ADD node-v14.18.0-linux-x64.tar.xz /opt/
+
+RUN mv /usr/share/jenkins/ref/apache-maven-3.8.3 /usr/share/jenkins/ref/maven
+RUN mv /opt/node-v14.18.0-linux-x64 /opt/nodejs
 RUN chown -R jenkins:jenkins /opt/nodejs
-RUN chown -R jenkins:jenkins /opt/maven
+
 USER jenkins
-#ENV JENKINS_OPTS --httpPort=-1 --httpsPort=8081 --httpsKeyStore=$REF_LOC/ssl/rahul.pfx --httpsKeyStorePassword=XXX
 EXPOSE 8080
-VOLUME $VOL
+VOLUME jenkins_home
 EOF
 
+#####################################
+# creates docker-compose.yml
+#####################################
+
+cat <<EOF >docker-compose.yml
+
+version: "3.9"
+services:
+  jenkins:
+    image: dasr4/my-jenkins:v2.2
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    ports:
+      - "8080:8080"
+    environment:
+      JENKINS_ADMIN_ID: "$DOL$DOL(cat /run/secrets/JENKINS_ADMIN_ID)"
+      JENKINS_ADMIN_PASSWORD: "$DOL$DOL(cat /run/secrets/JENKINS_ADMIN_PASSWORD)"
+    secrets:
+      - JENKINS_ADMIN_ID
+      - JENKINS_ADMIN_PASSWORD
+secrets:
+  JENKINS_ADMIN_ID:
+    file: user.txt
+  JENKINS_ADMIN_PASSWORD:
+    file: pwd.txt
+volumes:
+  jenkins_home:
+EOF
+######################################
+#####################################
+# creates user.txt
+#####################################
+
+cat <<EOF >user.txt
+XXXX
+EOF
+######################################
+
+#####################################
+# creates pwd.txt
+#####################################
+XXXX
+cat <<EOF >pwd.txt
+EOF
+####################################
+
 docker build --no-cache -t $IMAGE .
-docker run -d --name $CONT -p 5000:8080 --env JENKINS_ADMIN_ID=admin --env JENKINS_ADMIN_PASSWORD=admin -v $HOME:/var/jenkins_home $IMAGE
+docker-compose up -d
+
+#docker run -d --name $CONT -p 5000:8080 --env JENKINS_ADMIN_ID=admin --env JENKINS_ADMIN_PASSWORD=admin -v $HOME:/var/jenkins_home $IMAGE
 
 #### Use this if you wish to run Manually #####
 #docker run -d --name mycontjs -p 5000:8080 --env JENKINS_ADMIN_ID=admin --env JENKINS_ADMIN_PASSWORD=admin -v $HOME:/var/jenkins_home myimagejs:casc
