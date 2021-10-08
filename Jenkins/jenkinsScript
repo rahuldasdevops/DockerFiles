@@ -1,5 +1,5 @@
 USERNAME=jenkins
-HOME=/opt/jenkins_home
+HOME=/var/jenkins_home
 VOL=jenkins_home
 IMAGE=myimagejs:final
 BASE_IMAGE=jenkins/jenkins:lts-jdk11
@@ -7,7 +7,6 @@ CONT=mycontjs
 REF_LOC=/usr/share/jenkins/ref
 NODEJS_HOME=/opt/nodejs
 MAVEN_HOME=/var/jenkins_home/maven
-DOL=$
 PORT=8080
 JNLP_PORT=49100
 
@@ -35,14 +34,14 @@ jenkins:
     local:
       allowsSignup: false
       users:
-       - id: $DOL{JENKINS_ADMIN_ID}
-         password: $DOL{JENKINS_ADMIN_PASSWORD}
+       - id: $\{JENKINS_ADMIN_ID}
+         password: \${JENKINS_ADMIN_PASSWORD}
        - id: test
          password: test@123		 
   authorizationStrategy:
     projectMatrix:
       permissions:
-        - "Overall/Administer: $DOL{JENKINS_ADMIN_ID}"
+        - "Overall/Administer: \${JENKINS_ADMIN_ID}"
         - "Overall/Read:authenticated"
         - "Overall/Read:test"
   remotingSecurity:
@@ -134,14 +133,14 @@ cat <<EOF >docker-compose.yml
 version: "3.9"
 services:
   jenkins:
-    image: $DOLIMAGE
+    image: $IMAGE
     volumes:
       - $VOL:$HOME
     ports:
       - "$PORT:$PORT"
     environment:
-      JENKINS_ADMIN_ID: "$DOL$DOL(cat /run/secrets/JENKINS_ADMIN_ID)"
-      JENKINS_ADMIN_PASSWORD: "$DOL$DOL(cat /run/secrets/JENKINS_ADMIN_PASSWORD)"
+      JENKINS_ADMIN_ID: "\$\$(cat /run/secrets/JENKINS_ADMIN_ID)"
+      JENKINS_ADMIN_PASSWORD: "\$\$(cat /run/secrets/JENKINS_ADMIN_PASSWORD)"
     secrets:
       - JENKINS_ADMIN_ID
       - JENKINS_ADMIN_PASSWORD
@@ -171,6 +170,22 @@ cat <<EOF >pwd.txt
 EOF
 ####################################
 
+#####################################
+# creates proxy.xml
+#####################################
+
+cat <<EOF >proxy.xml
+<?xml version='1.1' encoding='UTF-8'?>
+<proxy>
+ <name>test.proxy.com</name>
+  <port>80</port>
+  <userName></userName>
+  <noProxyHost></noProxyHost>
+  <secretPassword></secretPassword>
+  <testUrl></testUrl>
+</proxy>
+EOF
+###################################
 
 #####################################
 # creates DockerFile
@@ -185,7 +200,7 @@ ENV CASC_JENKINS_CONFIG $HOME/casc.yaml
 ENV HOME $HOME
 ENV NODEJS_HOME $NODEJS_HOME
 ENV MAVEN_HOME $MAVEN_HOME
-ENV PATH $DOLNODEJS_HOME/bin:$DOLMAVEN_HOME/bin:$DOLPATH
+ENV PATH $NODEJS_HOME/bin:$MAVEN_HOME/bin:\$PATH
 ### Enable below PROXY if you run this in any enterprise
 #ENV HTTPS_PROXY
 #ENV HTTP_PROXY
