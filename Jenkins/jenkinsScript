@@ -126,44 +126,6 @@ wget https://nodejs.org/dist/v14.17.6/node-v14.17.6-linux-x64.tar.xz
 #####################################
 
 #####################################
-# creates DockerFile
-#####################################
-
-cat <<EOF >Dockerfile
-FROM $BASE_IMAGE
-MAINTAINER Rahul Das
-ENV JENKINS_SLAVE_AGENT_PORT=$JNLP_PORT
-ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
-ENV CASC_JENKINS_CONFIG $HOME/casc.yaml
-ENV HOME $HOME
-ENV NODEJS_HOME $NODEJS_HOME
-ENV MAVEN_HOME $MAVEN_HOME
-ENV PATH $DOLNODEJS_HOME/bin:$DOLMAVEN_HOME/bin:$DOLPATH
-### Enable below PROXY if you run this in any enterprise
-#ENV HTTPS_PROXY
-#ENV HTTP_PROXY
-
-COPY --chown=$USERNAME:$USERNAME plugins.txt $REF_LOC
-RUN xargs /usr/local/bin/install-plugins.sh < $REF_LOC/plugins.txt
-
-COPY --chown=$USERNAME:$USERNAME executors.groovy  $REF_LOC/init.groovy.d/executors.groovy
-COPY --chown=$USERNAME:$USERNAME casc.yaml $HOME
-#COPY --chown=$USERNAME:$USERNAME proxy.xml $HOME
-
-ADD maven.tar.gz $REF_LOC
-USER root
-ADD node-v14.18.0-linux-x64.tar.xz /opt/
-
-RUN mv $REF_LOC/apache-maven-3.8.3 $REF_LOC/maven
-RUN mv /opt/node-v14.18.0-linux-x64 $NODEJS_HOME
-RUN chown -R $USERNAME:$USERNAME $NODEJS_HOME
-
-USER $USERNAME
-EXPOSE $PORT
-VOLUME $VOL
-EOF
-
-#####################################
 # creates docker-compose.yml
 #####################################
 
@@ -208,6 +170,45 @@ XXXX
 cat <<EOF >pwd.txt
 EOF
 ####################################
+
+
+#####################################
+# creates DockerFile
+#####################################
+
+cat <<EOF >Dockerfile
+FROM $BASE_IMAGE
+MAINTAINER Rahul Das
+ENV JENKINS_SLAVE_AGENT_PORT=$JNLP_PORT
+ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
+ENV CASC_JENKINS_CONFIG $HOME/casc.yaml
+ENV HOME $HOME
+ENV NODEJS_HOME $NODEJS_HOME
+ENV MAVEN_HOME $MAVEN_HOME
+ENV PATH $DOLNODEJS_HOME/bin:$DOLMAVEN_HOME/bin:$DOLPATH
+### Enable below PROXY if you run this in any enterprise
+#ENV HTTPS_PROXY
+#ENV HTTP_PROXY
+
+COPY --chown=$USERNAME:$USERNAME plugins.txt $REF_LOC
+RUN xargs /usr/local/bin/install-plugins.sh < $REF_LOC/plugins.txt
+
+COPY --chown=$USERNAME:$USERNAME executors.groovy  $REF_LOC/init.groovy.d/executors.groovy
+COPY --chown=$USERNAME:$USERNAME casc.yaml $HOME
+#COPY --chown=$USERNAME:$USERNAME proxy.xml $HOME
+
+ADD maven.tar.gz $REF_LOC
+USER root
+ADD node-v14.18.0-linux-x64.tar.xz /opt/
+
+RUN mv $REF_LOC/apache-maven-3.8.3 $REF_LOC/maven
+RUN mv /opt/node-v14.18.0-linux-x64 $NODEJS_HOME
+RUN chown -R $USERNAME:$USERNAME $NODEJS_HOME
+
+USER $USERNAME
+EXPOSE $PORT
+VOLUME $VOL
+EOF
 
 docker build --no-cache -t $IMAGE .
 docker-compose up -d
