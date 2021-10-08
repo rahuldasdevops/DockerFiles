@@ -9,7 +9,7 @@ NODEJS_HOME=/opt/nodejs
 MAVEN_HOME=/var/jenkins_home/maven
 DOL=$
 PORT=8080
-JNLP_PORT=449100
+JNLP_PORT=49100
 
 
 #mkdir $HOME
@@ -121,8 +121,8 @@ EOF
 #####################################
 # Download Maven and NodeJs package
 #####################################
-wget https://dlcdn.apache.org/maven/maven-3/3.8.3/binaries/apache-maven-3.8.3-bin.tar.gz
-wget https://nodejs.org/dist/v14.17.6/node-v14.17.6-linux-x64.tar.xz
+wget https://dlcdn.apache.org/maven/maven-3/3.8.3/binaries/apache-maven-3.8.3-bin.tar.gz --no-check-certificate
+wget https://nodejs.org/dist/v14.17.6/node-v14.17.6-linux-x64.tar.xz --no-check-certificate
 #####################################
 
 #####################################
