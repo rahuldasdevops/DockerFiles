@@ -6,6 +6,7 @@
 
 # [Recommendation]
 Using docker compose file either in single machine or `STACK` mode:- `docker-compose up -d`.
+`docker stack deploy -c docker-compose.yml jenkins`
 Just need to create `user.txt` and `pwd.txt` in plain text, affter run you can remove. 
 # To create new image
 `bash jenkinsScript`
