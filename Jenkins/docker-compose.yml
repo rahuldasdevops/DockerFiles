@@ -6,7 +6,7 @@ services:
       - jenkins_home:/var/jenkins_home
     ports:
       - "8080:8080"
-	networks:
+    networks:
       - jenkins_net
     environment:
       JENKINS_ADMIN_ID: "$$(cat /run/secrets/JENKINS_ADMIN_ID)"
@@ -23,5 +23,5 @@ volumes:
   jenkins_home:
 networks:
   jenkins_net:
-    # Use a custom driver
+    # "overlay" for swarm mode/"bridge" for docker-compose
     driver: overlay
